@@ -1,12 +1,19 @@
 from replit import db
 import os
 import requests
-from flask import Flask, request
-from threading import Thread
+from flask import Flask, request, make_response
+from threading import Thread, Timer
 from test import update_forked_repl, delete_file
 from spin import perform
+import time
+import sys
 
 app = Flask('')
+
+
+def stop_repl():
+  os._exit(0)
+  # sys.exit(0)
 
 
 @app.route('/')
@@ -19,6 +26,7 @@ def some():
   print('on')
   response = requests.get('https://api.ipify.org')
   print(response.text)
+  # Timer(10, stop_repl).start()
   return response.text
 
 
@@ -53,6 +61,8 @@ def receive_json():
     elif isinstance(removed, str):
       delete_file(removed)
 
+    Timer(15, stop_repl).start()
+
     return 'Received', 200
   else:
     return 'Bad Request', 402
@@ -70,19 +80,22 @@ def original():
       print("comensing perform")
       success = perform(url, method)
       if success:
+        Timer(15, stop_repl).start()
         return 'Received', 200
       else:
         return 'Error', 400
 
-    return 'Received', 200
   else:
     return 'Bad Request', 402
 
 
 def run():
-  app.run(host='0.0.0.0', port=int(os.getenv('PORT', 8080)))
+  # os.system("uwsgi --http :8080 --wsgi-file main.py --callable app")
+  app.run(host='0.0.0.0', port=int(os.getenv('PORT', 5000)), threaded=True)
 
 
 def keep_alive():
+  # while True:
   t = Thread(target=run)
+  # if not t.is_alive():
   t.start()
