@@ -64,6 +64,11 @@ def perform(url, method):
           By.CSS_SELECTOR,
           "body > div > div.page.-cx-PRIVATE-Page__body.-cx-PRIVATE-Page__body__ > div > div > p:nth-child(3) > button"
       ).click()
+    elif method == 'ld':
+      print('l')
+      time.sleep(3)
+      driver.find_element(By.CSS_SELECTOR, ".main > a").click()
+
     else:
       print("no method speccified method")
     time.sleep(random.uniform(5, 8))
