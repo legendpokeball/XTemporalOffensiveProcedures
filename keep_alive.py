@@ -61,7 +61,7 @@ def receive_json():
     elif isinstance(removed, str):
       delete_file(removed)
 
-    Timer(4, stop_repl).start()
+    Timer(2, stop_repl).start()
 
     return 'Received', 200
   else:
@@ -80,7 +80,7 @@ def original():
       print("comensing perform")
       success = perform(url, method)
       if success:
-        Timer(4, stop_repl).start()
+        Timer(2, stop_repl).start()
         return 'Received', 200
       else:
         return 'Error', 400
