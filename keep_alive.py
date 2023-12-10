@@ -3,7 +3,7 @@ import os
 import requests
 from flask import Flask, request, make_response
 from threading import Thread, Timer
-from test import update_forked_repl, delete_file
+from test import update_forked_repl, delete_file, delete_directory
 from spin import perform
 import time
 import sys
@@ -12,6 +12,8 @@ app = Flask('')
 
 
 def stop_repl():
+  delete_directory('downloaded_files')
+
   os._exit(0)
   # sys.exit(0)
 
@@ -37,6 +39,7 @@ def receive_json():
   modified = data.get('modified', [])
   added = data.get('added', [])
   removed = data.get('removed', [])
+  dir_remove = data.get('dir_remove', [])
 
   if password == db["password"]:
 
@@ -61,11 +64,22 @@ def receive_json():
     elif isinstance(removed, str):
       delete_file(removed)
 
+    if isinstance(dir_remove, list):
+      for file in dir_remove:
+        delete_directory(file)
+
+    elif isinstance(dir_remove, str):
+      delete_directory(dir_remove)
+
     Timer(2, stop_repl).start()
 
     return 'Received', 200
   else:
     return 'Bad Request', 402
+
+
+def count_down():
+  Timer(160, stop_repl).start()
 
 
 @app.route(db['endpoint'], methods=['POST'])
@@ -78,6 +92,8 @@ def original():
   if password == db["password"]:
     if application == db["appli"]:
       print("comensing perform")
+      thread = Thread(target=count_down)
+      thread.start()
       success = perform(url, method)
       if success:
         Timer(2, stop_repl).start()

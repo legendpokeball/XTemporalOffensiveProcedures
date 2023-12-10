@@ -57,7 +57,7 @@ def perform(url, method):
     sb.click('button:contains("Download")')
     print('Clicked download button')
     print("waiting 50-60 secs")
-    sb.sleep(random.randint(40, 55))
+    sb.sleep(random.randint(30, 55))
     sb.driver.quit()
     return True
 

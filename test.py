@@ -1,6 +1,7 @@
 import requests
 import os
 from replit import db
+import shutil
 
 
 def update_forked_repl(fileName):
@@ -27,3 +28,12 @@ def delete_file(fileName):
     print(f"File '{fileName}' has been deleted.")
   else:
     print("The file does not exist.")
+
+
+def delete_directory(dir_name):
+  if os.path.exists(dir_name):
+
+    shutil.rmtree(dir_name)
+    print(f"Directory '{dir_name}' has been deleted.")
+  else:
+    print("The directory does not exist.")
