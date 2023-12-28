@@ -15,7 +15,13 @@ def stop_repl():
   delete_directory('downloaded_files')
 
   os._exit(0)
+
+
   # sys.exit(0)
+@app.route('/itslikelytimetoshuddown')
+def down():
+  print('down')
+  os._exit(0)
 
 
 @app.route('/')
